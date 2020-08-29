@@ -27,6 +27,8 @@
 !----------------File Naming-------------
        character(len=6) :: infname='in.grd'
        character(len=6) :: outfname = 'out.nc'
+       character(len=8) :: lon_mesh = 'lon_mesh'
+       character(len=8) :: lat_mesh = 'lat_mesh'
 
 !-------------------Domain-----------------
 ! Maximum width (i), length(j), depth (k), and time (i)
@@ -132,9 +134,9 @@
        ! var name (same for in and outfiles)
        ! Updated from 20 because some NSIDC files require longer names.
        character(len=50), allocatable :: varname(:)
-       character(len=50) :: varname_cur
        character(len=50) :: varn
-
+       character(len=1) :: grd2nc_suffix='1'
+       
        ! var type (int, real, etc., same for in and out)
        integer, allocatable :: vartype(:)
        integer :: vart
@@ -318,14 +320,7 @@
 #endif
           ! Copy this dimension to the output files
           aodid(v) = ncddef(ofid,trim(dimname(v)),dimsize(v),exitcode)
-#ifdef verbose
-          if(exitcode .eq. 0) then
-             write(*,*) '   Dimension copy to avg file OK, ID: ',aodid(v)
-          else
-             write(*,*) '   Dimension creation error.'
-             stop
-          endif
-#endif
+          call checkexit(exitcode,'Dimension copy to avg file failed')
        enddo
 
 !----------------------------------------
@@ -428,15 +423,13 @@
 
 !----------------------------------------
 
-          aovid(v) = ncvdef(ofid,trim(varname(v)),&
+          ! Key change for conversion to Ferret:
+          ! Change variable names in output!
+          write(varn,'(a,a)') trim(varname(v)),grd2nc_suffix
+          aovid(v) = ncvdef(ofid,varn,&
                vartype(v),nvdims(v),aovdims,exitcode)
-          if(exitcode .eq. 0) then
-             write(*,*) '   Variable shape copy to avg file OK.'
-          else
-             write(*,*) 'Error creating new variable in out file.'
-             stop
-          endif
-
+          call checkexit(exitcode,'Error creating new variable in out file.')
+          
           deallocate(aovdims)
 
 !----------------------------------------
@@ -1550,4 +1543,31 @@
 #endif
       end program grd2nc
 
+!------------------------------------------------
+     subroutine checkexit(code,message)
+
+!------------------------------------------------
+! This subroutine checks the output of the
+! netcdf subroutines and will stop the code
+! if something is wrong.
+!------------------------------------------------
+
+       integer :: code
+       character :: message
+
+       if (code .gt. 0) then
+          write(*,*) message
+          stop
+       elseif(code .eq. 0) then
+#ifdef verbose
+          write(*,*) ' Success!'
+#endif
+       else
+          write(*,*) ' Unknown exitcode from get_command_argument!'
+          stop
+       endif
+
+       return
+
+     end subroutine checkexit
 !------------------------------------------------
