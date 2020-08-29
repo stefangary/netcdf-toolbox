@@ -1,0 +1,13 @@
+# Emacs backup files
+*~
+
+# Compiled executables
+*.x
+
+# Object files
+*.o
+
+# Any grd or nc files that were being used locally
+*.grd
+*.nc
+
