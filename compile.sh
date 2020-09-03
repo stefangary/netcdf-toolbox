@@ -35,6 +35,9 @@ set netcdfdir = /usr/local/lib
 #echo Compiling and linking flame_grid_2_cdf...
 #gfortran ${srcdir}/flame_grid_2_cdf.f90 -o flame_grid_2_cdf.x gridsio.o -L${netcdfdir} -lnetcdff
 
+echo compiling and linking change_values...
+gfortran -O ${srcdir}/change_values.f90 -o change_values.x -L/usr/local/lib -lnetcdff
+
 echo Compiling and linking avgcdf...
 gfortran -xf95-cpp-input -Dverbose -Dbigfile -O ${srcdir}/avgcdf.f90 -o avgcdf_verbose_bigfile.x -L/usr/local/lib -lnetcdff
 
