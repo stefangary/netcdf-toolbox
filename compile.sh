@@ -36,14 +36,14 @@ set netcdfdir = /usr/local/lib
 #gfortran ${srcdir}/flame_grid_2_cdf.f90 -o flame_grid_2_cdf.x gridsio.o -L${netcdfdir} -lnetcdff
 
 echo compiling and linking change_values...
-gfortran -O ${srcdir}/change_values.f90 -o change_values.x -L/usr/local/lib -lnetcdff
+gfortran -fallow-argument-mismatch -O ${srcdir}/change_values.f90 -o change_values.x -L/usr/local/lib -lnetcdff
 
 echo Compiling and linking avgcdf...
-gfortran -xf95-cpp-input -Dverbose -Dbigfile -O ${srcdir}/avgcdf.f90 -o avgcdf_verbose_bigfile.x -L/usr/local/lib -lnetcdff
+gfortran -xf95-cpp-input -Dverbose -Dbigfile -fallow-argument-mismatch -O ${srcdir}/avgcdf.f90 -o avgcdf_verbose_bigfile.x -L/usr/local/lib -lnetcdff
 
 echo Compiling and linking grd2nc...
 #gfortran -xf95-cpp-input -Dverbose -Dbigfile -O ${srcdir}/grd2nc.f90 -o grd2nc_verbose_bigfile.x -L/usr/local/lib -lnetcdff
-gfortran -xf95-cpp-input -Dverbose -O ${srcdir}/grd2nc.f90 -o grd2nc.x -L/usr/local/lib -lnetcdff
+gfortran -xf95-cpp-input -Dverbose -fallow-argument-mismatch -O ${srcdir}/grd2nc.f90 -o grd2nc.x -L/usr/local/lib -lnetcdff
 
 #echo Compiling and linking FLAME_wind_stress_curl...
 #gfortran -xf95-cpp-input -Dverbose -c ${srcdir}/FLAME_wind_stress_curl.f90 -o flame_wind_stress_curl.o
@@ -54,8 +54,8 @@ gfortran -xf95-cpp-input -Dverbose -O ${srcdir}/grd2nc.f90 -o grd2nc.x -L/usr/lo
 #gfortran -xf95-cpp-input             -Dverbose               -c ${srcdir}/CORE_uv2tau.f90 -o CORE_uv2tau.o
 #gfortran gridsio.o basicfun.o CORE_uv2tau.o ops2d_cut.o -o CORE_uv2tau.x -L${netcdfdir} -lnetcdff
 
-echo Compiling and linking cutcdf...
-gfortran -xf95-cpp-input -Dbigfile -Drhp ${srcdir}/cutcdf3.f90 -o cutcdf.x -L${netcdfdir} -lnetcdff
+#echo Compiling and linking cutcdf...
+#gfortran -xf95-cpp-input -Dbigfile -Drhp ${srcdir}/cutcdf3.f90 -o cutcdf.x -L${netcdfdir} -lnetcdff
 
 #echo Compiling and linking get_launch_depth...
 #rm -f gridsio.o
